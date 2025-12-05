@@ -1,14 +1,23 @@
-banks = [b.strip() for b in open('3.txt').readlines()]
+banks = [b.strip() for b in open('3-1.txt').readlines()]
 
 total = 0
 
-for bank in banks:
+def best_joltage(bank, n):
+    if n == 0:
+        return ''
+
     best = 0
 
-    for i, a in enumerate(bank):
-        for b in bank[i+1:]:
-            best = max(best, int(a + b))
+    for i, val in enumerate(bank):
+        best = max(best, int(val + best_joltage(bank[i+1:], n-1)))
 
-    total += best
+
+    return str(best or '')
+
+for bank in banks:
+    best = best_joltage(bank, 12)
+
+    print(best)
+    total += int(best)
 
 print(total)
