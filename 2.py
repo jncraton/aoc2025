@@ -8,10 +8,15 @@ for r in ranges:
     for i in range(start, stop+1):
         i = str(i)
 
-        if len(i) % 2 == 0:
-            l = i[:len(i)//2]
-            r = i[len(i)//2:]
-            if l == r:
-                total += int(i)
+        for step in range(1, (len(i)//2)+1):
+            if len(i) % step == 0:
+                for idx in range(0, len(i)-step, step):
+                    l = i[idx:idx+step]
+                    r = i[idx+step:idx+step+step]
+                    if l != r:
+                        break
+                else:
+                    total += int(i)
+                    break
 
 print(total)
