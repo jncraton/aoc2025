@@ -6,6 +6,9 @@ def get(grid, x, y):
     if x < 0 or y < 0:
         return None
 
-    return grid[y][x]
+    try:
+        return grid[y][x]
+    except IndexError:
+        return None
 
-print(get(grid, -1, -1))
+print(get(grid, 100, 100))
