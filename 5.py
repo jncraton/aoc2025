@@ -1,4 +1,4 @@
-fresh, available = open('5-1.txt').read().split('\n\n')
+fresh, available = open('5.txt').read().split('\n\n')
 
 fresh = [list(map(int, f.split('-'))) for f in fresh.split()]
 available = [int(a) for a in available.split()]
