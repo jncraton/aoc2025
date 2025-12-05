@@ -1,7 +1,10 @@
-banks = [b.strip() for b in open('3-1.txt').readlines()]
+from functools import cache
+
+banks = [b.strip() for b in open('3.txt').readlines()]
 
 total = 0
 
+@cache
 def best_joltage(bank, n):
     if n == 0:
         return ''
@@ -10,7 +13,6 @@ def best_joltage(bank, n):
 
     for i, val in enumerate(bank):
         best = max(best, int(val + best_joltage(bank[i+1:], n-1)))
-
 
     return str(best or '')
 
