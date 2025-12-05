@@ -6,9 +6,11 @@ dial = 50
 zeroes = 0
 
 for rotation in rotations:
-    dial = (dial + rotation) % 100
+    step = int(rotation / abs(rotation))
 
-    if dial == 0:
-        zeroes += 1
+    for tick in range(dial, dial+rotation, step):
+        dial = (dial + step) % 100
+        if dial == 0:
+            zeroes += 1
 
 print(zeroes)
