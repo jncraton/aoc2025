@@ -11,4 +11,16 @@ def get(grid, x, y):
     except IndexError:
         return None
 
-print(get(grid, 100, 100))
+def adj(grid, x, y):
+    res = []
+
+    for i in [x-1, x, x+1]:
+        for j in [y-1, y, y+1]:
+            if i != x or j != y:
+                if get(grid, i, j):
+                    res.append((i, j, get(grid, i, j)))
+
+    return res
+
+
+print(adj(grid, 1,1))
