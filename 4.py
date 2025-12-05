@@ -1,6 +1,4 @@
-grid = [list(row.strip()) for row in open('4-1.txt').readlines()]
-
-print(grid)
+grid = [list(row.strip()) for row in open('4.txt').readlines()]
 
 def get(grid, x, y):
     if x < 0 or y < 0:
@@ -22,5 +20,14 @@ def adj(grid, x, y):
 
     return res
 
+total = 0
+for row,row_content in enumerate(grid):
+    for col,_ in enumerate(row_content):
+        if get(grid, col, row) != '@':
+            continue
+        
+        rolls = [g for g in adj(grid, col, row) if g[2] == '@']
+        if len(rolls) < 4:
+            total += 1
 
-print(adj(grid, 1,1))
+print(total)
