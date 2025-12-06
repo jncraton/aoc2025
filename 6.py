@@ -13,4 +13,30 @@ for problem in problems:
     if op == "*":
         total += prod(operands)
 
+# Part 2
+
+rows = [list(r.replace('\n','')) for r in open('6.txt').readlines()]
+
+nums = []
+op = None
+total = 0
+for col_idx in range(len(rows[0])):
+    col = ""
+    for row in rows:
+        c = row[col_idx]
+
+        if c == "+":
+            op = sum
+        elif c == "*":
+            op = prod
+        else:
+            col += c
+
+    if col.strip():
+        nums.append(int(col))
+    else: # Blank column, so do the math
+        total += op([int(n) for n in nums])
+        nums = []
+
+total += op([int(n) for n in nums])
 print(total)
