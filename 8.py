@@ -18,7 +18,7 @@ circuits = {}
 next_circuit = 0
 trace = tuple()
 
-for distance, a, b in pairs[:1000]:
+for distance, a, b in pairs[:1000000]:
     if circuits.get(a) in trace or circuits.get(b) in trace:
         print('start', distance, a, b, circuits.get(a), circuits.get(b)) 
 
@@ -46,10 +46,14 @@ for distance, a, b in pairs[:1000]:
             print('new', distance, a, b, circuits[a], circuits[b]) 
 
     if circuits[a] in trace or circuits[b] in trace:
-        print('end', distance, a, b, circuits[a], circuits[b]) 
+        print('end', distance, a, b, circuits[a], circuits[b])
 
-counts = Counter(circuits.values())
+    counts = Counter(circuits.values())
 
-total = prod(count for _, count in counts.most_common(3))
+    if counts.most_common(1)[0][1] == len(boxes):
+        print(a[0] * b[0])
+        break
 
-print(total)
+
+#total = prod(count for _, count in counts.most_common(3))
+#print(total)
