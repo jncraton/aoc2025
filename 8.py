@@ -7,7 +7,7 @@ boxes = [tuple([int(x) for x in line.strip().split(',')]) for line in open('8-1.
 pairs = []
 
 for a, b in combinations(boxes, 2):
-    distance = sum(ai*bi for ai,bi in zip(a,b))
+    distance = sum((ai-bi)**2 for ai,bi in zip(a,b))
     pairs.append((distance, a, b))
 
 pairs.sort()
