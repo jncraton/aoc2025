@@ -3,7 +3,7 @@ from itertools import combinations
 
 sys.setrecursionlimit(100000)
 
-reds = [[int(v) for v in l.strip().split(",")] for l in open("9.txt").readlines()]
+reds = [[int(v) for v in l.strip().split(",")] for l in open("9-1.txt").readlines()]
 
 rects = []
 
@@ -75,13 +75,21 @@ def is_inside(bounds, point):
 
     return bounds_crossed % 2 == 1
 
+# Build a new boundary outside the first one, as the first one is really inside
+outer_bounds = set()
+for bound in bounds:
+    for off_x in [-1, 0, 1]:
+        for off_y in [-1, 0, 1]:
+            p = (bound[0]+off_x, bound[1]+off_y)
+            if not is_inside(bounds, p):
+                outer_bounds.add(p)
 
 if False:
     import pandas as pd
     import matplotlib.pyplot as plt
 
-    # pd.DataFrame(bounds).plot.scatter(0, 1)
-    # plt.show()
+    pd.DataFrame(outer_bounds).plot.scatter(0, 1)
+    plt.show()
 
     greens = []
     for x in range(0, 15):
