@@ -1,9 +1,10 @@
 import sys
 from itertools import combinations
+import concurrent.futures
 
 sys.setrecursionlimit(100000)
 
-reds = [[int(v) for v in l.strip().split(",")] for l in open("9-1.txt").readlines()]
+reds = [[int(v) for v in l.strip().split(",")] for l in open("9.txt").readlines()]
 
 rects = []
 
@@ -49,7 +50,7 @@ def is_inside(bounds, point):
     below = False
 
     in_bound = False
-    for i in range(0, x + 1):
+    for i in range(-1, x + 1):
         if (i, y) not in bounds and in_bound:
             # We've just left a bound
             # We still have to confirm we weren't riding a bound
@@ -76,13 +77,27 @@ def is_inside(bounds, point):
     return bounds_crossed % 2 == 1
 
 # Build a new boundary outside the first one, as the first one is really inside
-outer_bounds = set()
-for bound in bounds:
-    for off_x in [-1, 0, 1]:
-        for off_y in [-1, 0, 1]:
+def get_new_bounds(bound):
+    new_bounds = set()
+    for off_x in [-1, 1]:
+        for off_y in [-1, 1]:
             p = (bound[0]+off_x, bound[1]+off_y)
+
             if not is_inside(bounds, p):
-                outer_bounds.add(p)
+                new_bounds.add(p)
+
+    return new_bounds
+
+outer_bounds = set()
+
+with concurrent.futures.ProcessPoolExecutor() as executor:
+    i = 0
+    for new_bounds in executor.map(get_new_bounds, bounds):
+        if i % 1000 == 0:
+            print(i, len(bounds))
+        i += 1
+        outer_bounds.update(new_bounds)
+
 
 if False:
     import pandas as pd
@@ -117,13 +132,13 @@ def is_valid(rect, bounds):
     for x in [min(rect[1][0], rect[2][0]), max(rect[1][0], rect[2][0])]:
         print(f"{x=}")
         for y in range(min(rect[1][1], rect[2][1]), max(rect[1][1], rect[2][1]) + 1):
-            if not is_inside(bounds, (x, y)):
+            if (x, y) in outer_bounds:
                 return False
 
     for y in [min(rect[1][1], rect[2][1]), max(rect[1][1], rect[2][1])]:
         print(f"{y=}")
         for x in range(min(rect[1][0], rect[2][0]), max(rect[1][0], rect[2][0]) + 1):
-            if not is_inside(bounds, (x, y)):
+            if (x, y) in outer_bounds:
                 return False
 
     return True
