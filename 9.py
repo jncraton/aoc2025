@@ -106,8 +106,15 @@ def is_valid(rect, bounds):
     if not is_inside(bounds, (rect[2][0], rect[1][1])):
         return False
 
-    for x in range(min(rect[1][0], rect[2][0]), max(rect[1][0], rect[2][0]) + 1):
+    for x in [min(rect[1][0], rect[2][0]), max(rect[1][0], rect[2][0])]:
+        print(f"{x=}")
         for y in range(min(rect[1][1], rect[2][1]), max(rect[1][1], rect[2][1]) + 1):
+            if not is_inside(bounds, (x, y)):
+                return False
+
+    for y in [min(rect[1][1], rect[2][1]), max(rect[1][1], rect[2][1])]:
+        print(f"{y=}")
+        for x in range(min(rect[1][0], rect[2][0]), max(rect[1][0], rect[2][0]) + 1):
             if not is_inside(bounds, (x, y)):
                 return False
 
