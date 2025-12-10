@@ -3,7 +3,7 @@ from queue import PriorityQueue
 
 machines = []
 
-for line in open('10-1.txt').readlines():
+for line in open('10.txt').readlines():
     machines.append({
         "goal": tuple(b == '#' for b in re.search(r'\[(.*?)\]', line)[1]),
         "edges": [tuple(int(n) for n in e.split(',')) for e in re.findall(r'\((.*?)\)', line)],
@@ -36,7 +36,6 @@ for machine in machines:
 
         if state == machine['goal']:
             total += cost
-            print(cost, state, edge)
             break
 
         for edge in machine['edges']:
