@@ -15,9 +15,9 @@ for line in open('10.txt').readlines():
 total = 0
 
 for machine in machines:
-    visited = set()
     frontier = PriorityQueue()
     start = tuple([False] * len(machine['goal']))
+    visited = set()
     visited.add(start)
     for edge in machine['edges']:
         frontier.put((0, start, edge))
@@ -50,9 +50,9 @@ print(total)
 total = 0
 
 for machine in machines:
-    visited = set()
     frontier = PriorityQueue()
     start = tuple([0] * len(machine['joltage_goal']))
+    visited = set()
     visited.add(start)
     for edge in machine['edges']:
         frontier.put((0, start, edge))
@@ -65,6 +65,9 @@ for machine in machines:
         state = tuple(j+1 if i in edge else j for i, j in enumerate(state))
 
         if state in visited:
+            continue
+
+        if any(cur > goal for cur, goal in zip(state, machine['joltage_goal'])):
             continue
 
         visited.add(state)
