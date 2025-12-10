@@ -55,10 +55,10 @@ for machine in machines:
     visited = set()
     visited.add(start)
     for edge in machine['edges']:
-        frontier.put((0, start, edge))
+        frontier.put((0, sum(machine['joltage_goal']), start, edge))
 
     while True:
-        cost, state, edge = frontier.get()
+        cost, distance, state, edge = frontier.get()
 
         cost += 1
 
@@ -66,6 +66,8 @@ for machine in machines:
 
         if state in visited:
             continue
+
+        distance = sum(goal - cur for cur, goal in zip(state, machine['joltage_goal']))
 
         if any(cur > goal for cur, goal in zip(state, machine['joltage_goal'])):
             continue
@@ -77,6 +79,6 @@ for machine in machines:
             break
 
         for edge in machine['edges']:
-            frontier.put((cost, state, edge))
+            frontier.put((cost, distance, state, edge))
 
 print(total)
