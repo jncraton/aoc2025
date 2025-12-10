@@ -1,4 +1,5 @@
 import re
+from queue import PriorityQueue
 
 machines = []
 
@@ -10,3 +11,29 @@ for line in open('10-1.txt').readlines():
     })
 
 # This is BFS over the button combos
+
+total = 0
+
+for machine in machines:
+    visited = set()
+    frontier = PriorityQueue()
+    start = [False] * len(machine['goal'])
+    for edge in machine['edges']:
+        frontier.put((0, start, edge))
+
+    while True:
+        cost, state, edge = frontier.get()
+
+        cost += 1
+
+        state = tuple(not s if i in edge else s for i, s in enumerate(state))
+
+        if state == machine['goal']:
+            total += cost
+            print(cost, state, edge)
+            break
+
+        for edge in machine['edges']:
+            frontier.put((cost, state, edge))
+
+print(total)      
