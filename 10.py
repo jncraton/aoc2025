@@ -55,10 +55,10 @@ for machine in machines:
     visited = set()
     visited.add(start)
     for edge in machine['edges']:
-        frontier.put((0, sum(machine['joltage_goal']), start, edge))
+        frontier.put((sum(machine['joltage_goal'])//len(machine['joltage_goal']), 0, start, edge))
 
     while True:
-        cost, distance, state, edge = frontier.get()
+        heuristic, cost, state, edge = frontier.get()
 
         cost += 1
 
@@ -67,7 +67,7 @@ for machine in machines:
         if state in visited:
             continue
 
-        distance = sum(goal - cur for cur, goal in zip(state, machine['joltage_goal']))
+        heuristic = cost + sum(goal - cur for cur, goal in zip(state, machine['joltage_goal'])) //len(machine['joltage_goal'])
 
         if any(cur > goal for cur, goal in zip(state, machine['joltage_goal'])):
             continue
@@ -79,6 +79,6 @@ for machine in machines:
             break
 
         for edge in machine['edges']:
-            frontier.put((cost, distance, state, edge))
+            frontier.put((heuristic, cost, state, edge))
 
 print(total)
