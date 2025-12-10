@@ -6,7 +6,7 @@ machines = []
 for line in open('10-1.txt').readlines():
     machines.append({
         "goal": tuple(b == '#' for b in re.search(r'\[(.*?)\]', line)[1]),
-        "edges": [tuple(int(n) for n in e.split(',')) for e in re.findall(r'\((.*?)\)', line)],
+        "edges": sorted([tuple(int(n) for n in e.split(',')) for e in re.findall(r'\((.*?)\)', line)], key=lambda e: -len(e)),
         "joltage_goal": tuple(int(n) for n in re.search(r'\{(.*?)\}', line)[1].split(',')),
     })
 
@@ -44,51 +44,25 @@ for machine in machines:
 print(total)      
 
 # Part 2
-
-# This is BFS over the button combos
-
-total = 0
-iters = 0
-
-for i, machine in enumerate(machines):
-    print(f"{i}/{len(machines)}: {machine['joltage_goal']} {machine['edges']}")
-    frontier = PriorityQueue()
-    start = tuple([0] * len(machine['joltage_goal']))
-    visited = set()
-    visited.add(start)
-    for edge in machine['edges']:
-        frontier.put((0, 0, start, edge))
-
-    best_press = max(len(e) for e in machine['edges'])
-
-    last_heuristic = 0
-    while True:
-        iters+=1
-        heuristic, cost, state, edge = frontier.get()
-
-        if state == machine['joltage_goal']:
-            total += cost
-            break
-
-        cost += 1
-
-        if any(cur > goal for cur, goal in zip(state, machine['joltage_goal'])):
-            continue
-
-        distance = sum(goal - cur for cur, goal in zip(state, machine['joltage_goal']))
-
-        heuristic = cost + distance / best_press
-
-        if heuristic > last_heuristic:
-            print(i, heuristic, distance, cost, state, edge)
-            last_heuristic = heuristic
-
-        for edge in machine['edges']:
-            next_state = tuple(j+1 if i in edge else j for i, j in enumerate(state))
-
-            if next_state not in visited:
-                visited.add(next_state)
-                frontier.put((heuristic, cost, next_state, edge))
-
-print("Total iterations:", iters)
-print(total)
+#
+# We need a different approach here
+#
+# The output should be a linear combination of the buttons
+#
+# For the first machine:
+#
+# [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+#
+# Labelling the buttons:
+#
+# [.##.] a(3) b(1,3) c(2) d(2,3) e(0,2) f(0,1) {3,5,4,7}
+# 3 = e
+# 5 = b
+# 4 = c + d + e
+# 7 = a + b + d
+#
+# We can solve this easily enough:
+#
+# e = 3
+# b = 5
+# 
