@@ -17,7 +17,8 @@ total = 0
 for machine in machines:
     visited = set()
     frontier = PriorityQueue()
-    start = [False] * len(machine['goal'])
+    start = tuple([False] * len(machine['goal']))
+    visited.add(start)
     for edge in machine['edges']:
         frontier.put((0, start, edge))
 
@@ -27,6 +28,11 @@ for machine in machines:
         cost += 1
 
         state = tuple(not s if i in edge else s for i, s in enumerate(state))
+
+        if state in visited:
+            continue
+
+        visited.add(state)
 
         if state == machine['goal']:
             total += cost
